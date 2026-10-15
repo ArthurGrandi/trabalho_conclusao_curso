@@ -19,6 +19,8 @@ from urllib.parse import urlsplit
 
 import httpx
 
+from .settings import data_directory
+
 PROMPT_VERSION = "tcc-evidence-v1"
 MAX_SOURCE_CHARS = 60000
 _BIBLIOGRAPHY = re.compile(r"(?im)^\s*(?:bibliografia|refer[eê]ncias)(?:\s+(?:b[aá]sica|complementar|bibliogr[aá]ficas))?\s*[:–—-]?")
@@ -104,7 +106,7 @@ class LLMClient:
         self._attempted = set()
         self._path = None
         if self.enabled:
-            directory = Path(data_dir or os.getenv("TCC_DATA_DIR", "/workspace/.tcc-data"))
+            directory = Path(data_dir) if data_dir is not None else data_directory()
             directory.mkdir(parents=True, exist_ok=True)
             self._path = directory / "llm_cache.sqlite3"
             with self._connect() as db:

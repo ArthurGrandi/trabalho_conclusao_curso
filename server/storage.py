@@ -8,10 +8,12 @@ import threading
 from pathlib import Path
 from typing import Callable
 
+from .settings import data_directory
+
 
 class Store:
     def __init__(self, directory: str | Path | None = None):
-        self.directory = Path(directory or os.getenv("TCC_DATA_DIR", "/workspace/.tcc-data"))
+        self.directory = Path(directory) if directory is not None else data_directory()
         self.directory.mkdir(parents=True, exist_ok=True)
         self.path = self.directory / "platform.sqlite3"
         self._lock = threading.RLock()

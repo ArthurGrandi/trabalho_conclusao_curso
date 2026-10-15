@@ -4,36 +4,41 @@ Plataforma de pesquisa para comparar as competências demandadas em vagas de TI 
 
 A interface segue a identidade dos anexos: Newsreader e IBM Plex, verde sóbrio, cinco etapas, indicadores rastreáveis e layout responsivo. As fontes são servidas localmente.
 
-## Executar
+## GitHub Codespaces
 
-Requisitos: Node.js 22.12+ (testado com 24), Python 3.12 e `uv` ou `pip`.
+1. No GitHub, clique em **Code → Codespaces** e abra ou crie um Codespace na branch `main`.
+2. Aguarde o editor terminar de abrir. No menu do editor, escolha **Terminal → New Terminal / Novo Terminal**. É no painel inferior que você digita os comandos; o README é apenas a documentação.
+3. No terminal da pasta do projeto, execute:
+
+   ```bash
+   npm start
+   ```
+
+4. Aguarde a instalação e a compilação, se for o primeiro uso. Quando aparecer **Uvicorn running ... :8000**, o servidor está iniciado. Mantenha esse terminal aberto.
+5. Na aba **Ports / Portas**, encontre a porta **8000** e clique no ícone de globo **Open in Browser / Abrir no navegador**. Caso a porta não apareça, use **Forward a Port / Encaminhar uma porta** e informe `8000`. Mantenha a visibilidade **Private**.
+
+**A porta 8000 abre a plataforma completa, com frontend e API.** Você não precisa iniciar outro terminal nem abrir a porta 5173 para usar a aplicação neste modo. O endereço para acessar o Codespace é fornecido pela aba Portas; o `localhost` do seu computador é outro ambiente.
+
+Se seu Codespace já estava aberto antes da última atualização, interrompa o comando anterior com **Ctrl+C** no respectivo terminal e atualize primeiro:
 
 ```bash
-bash scripts/setup.sh
+git pull --ff-only origin main
+npm start
+```
+
+O projeto inclui uma configuração de Codespaces com Python 3.12 e Node.js 22, preparação das dependências e encaminhamento das portas. Para aplicar essa configuração em um Codespace antigo, use **Codespaces: Rebuild Container** na paleta de comandos do editor. A criação/reconstrução do contêiner não foi executada neste workspace; os comandos de instalação, execução e acesso HTTP foram testados aqui.
+
+## Executar no seu computador
+
+Requisitos: Node.js 22.12+ (testado com 24), Python 3.12 com `venv` e `uv` ou `pip`. Use Linux/macOS ou WSL2 no Windows. Na pasta do projeto, execute `npm start`. O script prepara dependências ausentes, compila a interface quando necessário e inicia tudo na porta 8000. `PORT` altera essa porta. Os dados ficam em `.tcc-data` dentro do projeto; não é necessário exportar um caminho específico.
+
+## Desenvolver com recarregamento automático
+
+```bash
 bash scripts/dev.sh
 ```
 
-O desenvolvimento usa a porta **5173** para o Vite e **8000** para a API. O Vite encaminha `/api` ao backend. O comando de desenvolvimento encerra os dois processos quando interrompido. As dependências Python ficam em `.venv`; as JavaScript usam `package-lock.json`.
-
-Para servir a compilação e a API em um único processo na porta 8000:
-
-```bash
-bash scripts/start.sh
-```
-
-`PORT` altera a porta desse processo. Os scripts não criam worktrees nem alteram fontes ou lockfiles durante a instalação.
-
-## GitHub Codespaces
-
-Abra um Codespace na branch com esta implementação. No terminal da raiz do repositório, execute:
-
-```bash
-export TCC_DATA_DIR="$PWD/.tcc-data"
-bash scripts/setup.sh
-bash scripts/start.sh
-```
-
-Na aba **Ports/Portas**, abra a porta **8000** no navegador e mantenha a visibilidade **Private**. Esse modo serve a interface compilada e a API na mesma porta. A variável `TCC_DATA_DIR` mantém os dados em um diretório gravável do Codespace, cujo checkout normalmente fica em `/workspaces`, em vez de `/workspace`. Confira se o ambiente tem Node.js 22.12+ e Python 3.12 antes da instalação.
+Esse modo usa **5173 para o frontend** e **8000 para a API**. Abra a porta **5173** no navegador; o Vite encaminha `/api` ao backend. No Codespaces, o endereço encaminhado é permitido sem desabilitar a validação dos demais hosts. Encerre o modo `npm start` antes de iniciar este modo, para liberar a porta 8000. Dependências Python ficam em `.venv`; JavaScript usa `package-lock.json`.
 
 ## Experimentar o fluxo
 
@@ -73,9 +78,9 @@ Para habilitar M3/A2, configure no ambiente do processo do servidor:
 | `TCC_LLM_API_KEY` | Chave do provedor; também aceita `OPENAI_API_KEY` existente |
 | `TCC_LLM_BASE_URL` | Base HTTPS, padrão `https://api.openai.com/v1` |
 | `TCC_LLM_MODEL` | Modelo, padrão `gpt-4o-mini` |
-| `TCC_DATA_DIR` | Diretório SQLite, padrão `/workspace/.tcc-data` |
+| `TCC_DATA_DIR` | Opcional: diretório SQLite, padrão `.tcc-data` dentro do projeto |
 
-`.env.example` é uma referência; os scripts não carregam `.env` automaticamente. Não envie chaves pelo chat nem as adicione ao Git. Para executar fora deste ambiente, defina `TCC_DATA_DIR` como um diretório gravável.
+`.env.example` é uma referência; os scripts não carregam `.env` automaticamente. Não envie chaves pelo chat nem as adicione ao Git. Defina `TCC_DATA_DIR` somente se quiser guardar os dados em outro diretório gravável.
 
 A integração usa temperatura 0, cache por hash, limite de chamadas e conferência das citações. Trechos inexistentes são descartados. Falha remota, limite ou ausência de chave aparecem como método não executado ou execução parcial. Dados de vagas e PPC são enviados ao provedor somente quando os métodos LLM são selecionados e configurados.
 

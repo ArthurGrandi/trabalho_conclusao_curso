@@ -24,6 +24,7 @@ from .areas import canonical_area
 from .engine import analyze
 from .reporting import csv_archive, export_tables, import_annotations, make_sample, now, validation_result, workbook
 from .storage import Store
+from .settings import data_directory
 from .uploads import clean_filename, deduplicate_jobs, parse_jobs, read_upload, segment_ppc
 
 
@@ -40,7 +41,7 @@ _store: Store | None = None
 
 def store() -> Store:
     global _store
-    directory = Path(os.getenv("TCC_DATA_DIR", "/workspace/.tcc-data"))
+    directory = data_directory()
     if _store is None or _store.directory != directory:
         _store = Store(directory)
     return _store
