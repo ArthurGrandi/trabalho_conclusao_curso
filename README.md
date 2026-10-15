@@ -28,6 +28,8 @@ npm start
 
 O projeto inclui uma configuração de Codespaces com Python 3.12 e Node.js 22, preparação das dependências e encaminhamento das portas. Para aplicar essa configuração em um Codespace antigo, use **Codespaces: Rebuild Container** na paleta de comandos do editor. A criação/reconstrução do contêiner não foi executada neste workspace; os comandos de instalação, execução e acesso HTTP foram testados aqui.
 
+Se a instalação antiga ficou em `pandas-2.2.3.tar.gz` ou `Preparing metadata`, interrompa com **Ctrl+C**, atualize com `git pull --ff-only origin main` e execute `npm start` novamente. O instalador seleciona explicitamente Python 3.12; se necessário, prepara esse interpretador com `uv` em um diretório local. Ambientes `.venv` com outra versão são preservados em `.cache/venv-backups` antes da recriação. Instalações incompletas são detectadas e retomadas. Pandas e NumPy usam pacotes binários, evitando uma compilação inesperada.
+
 ## Executar no seu computador
 
 Requisitos: Node.js 22.12+ (testado com 24), Python 3.12 com `venv` e `uv` ou `pip`. Use Linux/macOS ou WSL2 no Windows. Na pasta do projeto, execute `npm start`. O script prepara dependências ausentes, compila a interface quando necessário e inicia tudo na porta 8000. `PORT` altera essa porta. Os dados ficam em `.tcc-data` dentro do projeto; não é necessário exportar um caminho específico.

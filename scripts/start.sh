@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
 set -euo pipefail
 cd "$(dirname "${BASH_SOURCE[0]}")/.."
-if [ ! -x .venv/bin/python ] || [ ! -d node_modules ]; then
-  echo 'Primeiro uso: preparando as dependências da plataforma…'
+if [ ! -x .venv/bin/python ] || ! .venv/bin/python scripts/check-runtime.py >/dev/null 2>&1 || [ ! -d node_modules ]; then
+  echo 'Preparando ou reparando as dependências da plataforma…'
   bash scripts/setup.sh
 elif [ ! -f dist/index.html ] || [ -n "$(find src public index.html package.json package-lock.json vite.config.ts tsconfig.json -type f -newer dist/index.html -print -quit)" ]; then
   echo 'Preparando a interface…'
