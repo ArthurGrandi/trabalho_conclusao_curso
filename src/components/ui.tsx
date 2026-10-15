@@ -1,0 +1,9 @@
+import type { ReactNode } from 'react';
+import { AlertTriangle, Check, Info, LoaderCircle, X } from 'lucide-react';
+export function Card({title,subtitle,action,children,className = '',id}: {title?: ReactNode;subtitle?: ReactNode;action?: ReactNode;children: ReactNode;className?: string;id?: string}) { return <section className={`card ${className}`} id={id}>{(title || action) && <div className="card-heading"><div>{title && <h2>{title}</h2>}{subtitle && <p className="muted small">{subtitle}</p>}</div>{action}</div>}{children}</section>; }
+export function Alert({children,kind='info',title}: {children: ReactNode;kind?: 'info'|'warning'|'error'|'success';title?: string}) {const Icon = kind === 'warning' ? AlertTriangle : kind === 'success' ? Check : kind === 'error' ? X : Info; return <div className={`alert ${kind}`} role={kind === 'error' || kind === 'warning' ? 'alert' : 'status'}><Icon size={18}/><div>{title && <strong>{title}</strong>}<div>{children}</div></div></div>; }
+export function Badge({children,kind='neutral'}: {children: ReactNode;kind?: string}) { return <span className={`badge ${kind}`}>{children}</span>; }
+export function Empty({title,children,action}: {title:string;children?:ReactNode;action?:ReactNode}) {return <div className="empty"><div className="empty-symbol"><Info size={24}/></div><h3>{title}</h3><p className="muted">{children}</p>{action}</div>;}
+export function Spinner({label='Carregando…'}: {label?: string}) {return <span className="inline"><LoaderCircle size={17} className="spin"/>{label}</span>;}
+export function Progress({value,label}: {value:number;label:string}) {return <div className="progress" role="progressbar" aria-label={label} aria-valuenow={Math.round(value)} aria-valuemin={0} aria-valuemax={100}><span style={{width:`${Math.min(100, Math.max(0,value))}%`}}/></div>;}
+export function SectionNote({children}: {children:ReactNode}) {return <p className="section-note"><Info size={16}/><span>{children}</span></p>;}

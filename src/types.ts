@@ -1,0 +1,14 @@
+export type Step = 'new' | 'review' | 'processing' | 'dashboard' | 'evidence' | 'validation';
+export type Config = { course: string; city: string; radius: number; platform: string; target: number; terms: string[]; tags: string; threshold: number; llm_limit: number; methods: string[]; source: 'csv' | 'jobspy' | 'demo' };
+export type Discipline = { id: string; name: string; period: number; hours: number; page: number; syllabus: string; objectives: string; bibliography: string; alert?: string | null };
+export type PPC = { filename: string; size: number; pages: number; disciplines: Discipline[] };
+export type Job = { id: string; title: string; company: string; city: string; area: string; date: string; url: string; description: string; source: string };
+export type Evidence = { source: 'job' | 'ppc'; source_id: string; text: string; page?: number; section?: string };
+export type Competency = { id: string; name: string; type: string; concept: string; area: string; synonyms: string[]; job_ids: string[]; discipline_ids: string[]; concept_discipline_ids: string[]; count: number; percent: number; status: 'covered' | 'partial' | 'gap'; evidence: Evidence[] };
+export type Association = { id: string; job_id: string; discipline_id: string; competency_id: string; method: 'A1' | 'A2'; verdict: 'covers' | 'partial' | 'none'; reason: string; job_excerpt: string; ppc_excerpt: string; page: number; verified: boolean; decision: 'accepted' | 'rejected' | null };
+export type Stage = { key: string; label: string; status: 'waiting' | 'running' | 'completed' | 'warning' | 'failed'; detail: string; duration: number };
+export type Results = { competencies: Competency[]; associations: Association[]; indicators: Record<string, unknown>; area_indicators: Record<string, unknown>; cooccurrence: unknown; unknown_terms?: Array<{ term: string; count: number }>; [key: string]: unknown };
+export type Batch = { id: number; created_at: string; status: 'review' | 'processing' | 'completed' | 'cancelled' | 'failed'; demo: boolean; config: Config; ppc: PPC; disciplines: Discipline[]; jobs: Job[]; stages: Stage[]; results: Results | null; corrections: number; llm_calls: number; logs: unknown[]; error?: string | null; validation?: Record<string, unknown> | null; [key: string]: unknown };
+export type BatchSummary = { id: number; created_at: string; status: Batch['status']; demo: boolean; config: Config; ppc: { filename: string }; job_count?: number; jobs_count?: number; [key: string]: unknown };
+export type Health = { status: string; capabilities: { pdf: boolean; jobspy: boolean; llm: boolean }; dictionary_count: number };
+export type Notify = (message: string, kind?: 'success' | 'error' | 'info') => void;

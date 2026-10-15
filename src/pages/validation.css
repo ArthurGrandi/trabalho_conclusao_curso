@@ -1,0 +1,95 @@
+.validation-page { gap: 24px; }
+.validation-steps { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 20px; }
+.validation-step-card { display: flex; flex-direction: column; min-width: 0; gap: 14px; }
+.validation-step-card > p { margin: 0; }
+.validation-step-heading { display: flex; align-items: center; gap: 10px; min-height: 34px; }
+.validation-step-heading h2 { font-size: 21px; margin: 0; }
+.validation-step-heading .badge { margin-left: auto; font-size: 10px; }
+.validation-step-number { width: 29px; height: 29px; flex: 0 0 auto; border: 1px solid #d8ddd7; background: #f5f5f1; color: #67716b; display: grid; place-items: center; border-radius: 50%; font-size: 13px; font-weight: 600; }
+.validation-step-number.done { border-color: #d3e6da; background: #eaf3ed; color: #2f624a; }
+.validation-sample-summary { display: flex; align-items: center; gap: 12px; padding: 17px 14px; background: #f5f7f3; border: 1px solid #e4e8e0; border-radius: 7px; color: #3e624d; }
+.validation-sample-summary > div { display: grid; gap: 5px; }
+.validation-sample-summary strong { font-weight: 500; font-size: 13px; }
+.validation-step-card > .btn { justify-content: center; margin-top: auto; }
+.validation-guide { border-top: 1px solid #e8e9e2; padding-top: 12px; font-size: 12px; }
+.validation-guide summary { display: flex; cursor: pointer; align-items: center; gap: 7px; color: #3c6a50; list-style: none; }
+.validation-guide summary::-webkit-details-marker { display: none; }
+.validation-guide summary svg:last-child { margin-left: auto; transition: transform 160ms; }
+.validation-guide[open] summary svg:last-child { transform: rotate(180deg); }
+.validation-guide-body { color: #687168; line-height: 1.65; padding-top: 5px; }
+.validation-guide-body p { margin: 10px 0 0; }
+.validation-guide-body code { color: #3e5145; font-size: 11px; }
+.validation-upload-state { min-height: 125px; flex: 1; border: 1px dashed #d8ddd3; background: #fafbf8; border-radius: 7px; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; gap: 9px; padding: 20px 18px; color: #718075; }
+.validation-upload-state strong { color: #505c52; font-size: 13px; font-weight: 500; }
+.validation-imported { min-height: 125px; flex: 1; border: 1px solid #d9e6db; background: #f4f8f3; border-radius: 7px; display: flex; flex-direction: column; align-items: flex-start; justify-content: center; gap: 8px; padding: 17px; color: #3c624a; }
+.validation-imported strong { max-width: 100%; overflow: hidden; text-overflow: ellipsis; font-size: 13px; white-space: nowrap; }
+.validation-step-footnote { font-size: 11px; text-align: center; }
+.validation-kappa { min-height: 125px; flex: 1; display: flex; flex-direction: column; justify-content: center; text-align: center; }
+.validation-kappa > span { font-family: 'IBM Plex Mono', monospace; font-size: 33px; letter-spacing: -.08em; color: #2f624a; }
+.validation-kappa p { margin: 10px 0 0; }
+.validation-kappa-placeholder { font-family: 'IBM Plex Mono', monospace; font-size: 27px; color: #8e988e; }
+.validation-secondary-filename { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.validation-file-input { display: none; }
+.validation-metric-legend { font-size: 11px; text-align: right; }
+.validation-source-groups { display: grid; gap: 20px; }
+.validation-source-title { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; padding: 0 0 11px; }
+.validation-source-title h3 { font-size: 14px; font-family: 'IBM Plex Sans', sans-serif; font-weight: 600; margin: 0; }
+.validation-metrics-table, .validation-errors-table { width: 100%; border-collapse: collapse; }
+.validation-metrics-table thead th, .validation-errors-table thead th { background: #f6f7f3; color: #758073; font-size: 11px; font-weight: 500; text-align: left; padding: 11px 16px; border-bottom: 1px solid #e6e9e1; }
+.validation-metrics-table tbody td, .validation-metrics-table tbody th { padding: 15px 16px; border-bottom: 1px solid #eceee7; font-size: 13px; text-align: left; }
+.validation-metrics-table tbody th { font-weight: 400; width: 34%; }
+.validation-metrics-table tbody th > .muted { display: inline-block; margin-left: 12px; font-size: 11px; }
+.validation-method-code { font-family: 'IBM Plex Mono', monospace; font-weight: 500; color: #344b3c; }
+.validation-metrics-table tbody td:nth-child(3), .validation-metrics-table tbody td:nth-child(4) { font-family: 'IBM Plex Mono', monospace; }
+.validation-metrics-table tbody td:nth-child(5) { min-width: 155px; }
+.validation-support > span { font-family: 'IBM Plex Mono', monospace; }
+.validation-support > small { display: block; margin-top: 5px; font-size: 10px; white-space: nowrap; }
+.validation-support-note { display: flex; align-items: flex-start; gap: 7px; line-height: 1.6; margin: 12px 0 0; font-size: 11px; }
+.validation-support-note svg { flex-shrink: 0; margin-top: 2px; }
+.validation-f1 { display: flex; align-items: center; gap: 12px; font-family: 'IBM Plex Mono', monospace; font-size: 12px; }
+.validation-f1-track { height: 9px; width: 105px; min-width: 60px; background: #f0f1ec; border-radius: 3px; position: relative; }
+.validation-f1-track > span { height: 100%; display: block; background: #b1b8af; border-radius: 3px; }
+.validation-f1-track.reached > span { background: #558569; }
+.validation-f1-track > i { height: 15px; top: -3px; width: 1px; background: #4d5c50; position: absolute; }
+.validation-best { font-weight: 700; }
+.validation-target-note { display: flex; align-items: center; flex-wrap: wrap; gap: 9px; border-top: 1px solid #e8eae2; margin-top: 20px; padding-top: 15px; }
+.validation-target-note > span:first-child { font-size: 11px; color: #778173; margin-right: 4px; }
+.validation-detail-grid { align-items: stretch; }
+.validation-errors-table tbody th, .validation-errors-table tbody td { padding: 11px 13px; font-size: 12px; border-bottom: 1px solid #eceee7; text-align: left; font-weight: 400; }
+.validation-errors-table tbody td { font-family: 'IBM Plex Mono', monospace; }
+.validation-errors-table .validation-error-total th, .validation-errors-table .validation-error-total td { font-weight: 600; border-bottom: 0; }
+.validation-detail-empty { min-height: 145px; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 20px 30px; color: #84907f; }
+.validation-detail-empty p { max-width: 340px; line-height: 1.65; }
+.validation-method-note { margin: 14px 0 0; font-size: 11px; }
+.validation-fingerprint-heading { display: flex; align-items: flex-start; gap: 11px; padding: 15px; border: 1px solid #dce7dc; border-radius: 6px; background: #f3f7f1; color: #4d7155; }
+.validation-fingerprint-heading > svg { flex-shrink: 0; }
+.validation-fingerprint-heading strong { font-size: 12px; font-weight: 500; }
+.validation-fingerprint-heading p { margin: 5px 0 0; font-size: 11px; }
+.validation-repro-list { font-size: 12px; display: grid; gap: 10px; margin: 17px 0; }
+.validation-repro-list > div { display: flex; align-items: baseline; gap: 15px; justify-content: space-between; }
+.validation-repro-list dt { color: #7b8378; }
+.validation-repro-list dd { margin: 0; font-family: 'IBM Plex Mono', monospace; font-size: 11px; text-align: right; }
+.validation-fingerprint { display: grid; gap: 6px; margin-bottom: 12px; }
+.validation-fingerprint code { font-size: 10px; background: #f5f6f1; border-radius: 4px; padding: 9px 10px; overflow-wrap: anywhere; color: #64705f; }
+.validation-export-options { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; margin: 0; padding: 0 0 24px; border: 0; }
+.validation-table-option { display: flex; align-items: flex-start; gap: 11px; padding: 16px 14px; border: 1px solid #e0e4db; border-radius: 6px; cursor: pointer; transition: border-color 150ms, background 150ms; }
+.validation-table-option:hover { border-color: #95ae99; }
+.validation-table-option.selected { border-color: #cbdccd; background: #f7faf5; }
+.validation-table-option input, .validation-format input { accent-color: #3f7151; flex: 0 0 auto; margin: 2px 0 0; width: 15px; height: 15px; }
+.validation-table-option > span, .validation-format label > span { display: flex; flex-direction: column; gap: 6px; }
+.validation-table-option strong { font-size: 12px; font-weight: 500; }
+.validation-table-option .small { font-size: 11px; line-height: 1.5; }
+.validation-export-bottom { border-top: 1px solid #e7eae1; padding-top: 21px; display: flex; align-items: center; justify-content: space-between; gap: 25px; }
+.validation-format { border: 0; margin: 0; padding: 0; display: flex; gap: 26px; }
+.validation-format legend { color: #757f6f; font-size: 11px; margin-bottom: 12px; }
+.validation-format label { display: flex; align-items: flex-start; gap: 8px; cursor: pointer; }
+.validation-format strong { font-size: 12px; font-weight: 500; }
+.validation-format label .small { font-size: 11px; }
+.validation-download-action { display: flex; flex-direction: column; align-items: flex-end; gap: 8px; }
+.validation-download-action > span { font-size: 11px; }
+.validation-privacy-note { display: flex; align-items: flex-start; gap: 7px; font-size: 11px; color: #7d8676; line-height: 1.6; margin: 22px 0 0; }
+.validation-privacy-note svg { flex-shrink: 0; margin-top: 1px; }
+.validation-sr-only { position: absolute; width: 1px; height: 1px; padding: 0; overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap; border: 0; }
+@media (max-width: 1150px) { .validation-steps { gap: 14px; } .validation-step-card { padding: 20px; } .validation-step-heading h2 { font-size: 18px; } .validation-step-heading { gap: 7px; } .validation-step-heading .badge { font-size: 9px; } .validation-export-options { grid-template-columns: repeat(2, minmax(0, 1fr)); } .validation-metrics-table tbody th > .muted { display: block; margin: 5px 0 0; } }
+@media (max-width: 800px) { .validation-steps { grid-template-columns: 1fr; } .validation-step-card { gap: 13px; } .validation-upload-state { min-height: 100px; } .validation-detail-grid { grid-template-columns: 1fr; } .validation-export-bottom { align-items: flex-start; flex-direction: column; } .validation-download-action { width: 100%; align-items: flex-start; } .validation-metric-legend { display: none; } }
+@media (max-width: 520px) { .validation-export-options { grid-template-columns: 1fr; } .validation-format { flex-direction: column; gap: 15px; } .validation-metrics-table { min-width: 620px; } .validation-step-heading h2 { font-size: 20px; } .validation-fingerprint-heading { padding: 12px; } .validation-target-note { gap: 7px; } .validation-target-note > span:first-child { flex-basis: 100%; } }

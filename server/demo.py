@@ -1,0 +1,208 @@
+"""Dados inteiramente sintéticos para explorar a plataforma sem credenciais.
+
+Não representam um PPC, organizações ou oportunidades reais. As evidências e
+indicadores exibidos no aplicativo devem ser calculados a partir deste corpus,
+e nunca apresentados como uma pesquisa do mercado de trabalho.
+"""
+from .areas import canonical_area
+
+
+def demo_data() -> dict:
+    """Devolve uma nova cópia do cenário demonstrativo em português brasileiro."""
+    disciplines = [
+        {
+            "id": "d01",
+            "name": "Algoritmos e Programação",
+            "period": 1,
+            "hours": 80,
+            "page": 18,
+            "syllabus": "Lógica de programação. Variáveis, condicionais, laços e funções. Resolução de problemas e implementação de algoritmos em Python. Manipulação de listas, dicionários e arquivos de texto.",
+            "objectives": "Construir algoritmos e programas em Python para resolver problemas de complexidade introdutória.",
+            "bibliography": "Material didático sintético: introdução à programação e exercícios de algoritmos.",
+        },
+        {
+            "id": "d02",
+            "name": "Programação Orientada a Objetos",
+            "period": 2,
+            "hours": 80,
+            "page": 23,
+            "syllabus": "Classes, objetos, encapsulamento, herança, polimorfismo e interfaces. Programação orientada a objetos com Java. Coleções, exceções, testes unitários e padrões de projeto introdutórios.",
+            "objectives": "Projetar e implementar aplicações em Java utilizando princípios de orientação a objetos.",
+            "bibliography": "Material didático sintético sobre orientação a objetos. Leitura complementar: aplicações com Spring Boot.",
+        },
+        {
+            "id": "d03",
+            "name": "Banco de Dados",
+            "period": 3,
+            "hours": 80,
+            "page": 29,
+            "syllabus": "Modelagem conceitual e relacional. Normalização, integridade referencial e transações. SQL para definição, consulta e manipulação de dados. Práticas com PostgreSQL, índices e otimização básica de consultas.",
+            "objectives": "Modelar bancos relacionais e escrever consultas SQL com junções e agregações.",
+            "bibliography": "Material didático sintético sobre fundamentos de bancos de dados relacionais.",
+        },
+        {
+            "id": "d04",
+            "name": "Desenvolvimento Web",
+            "period": 4,
+            "hours": 80,
+            "page": 35,
+            "syllabus": "Estrutura de documentos com HTML e apresentação com CSS. JavaScript no navegador. Interfaces web responsivas, componentes reutilizáveis, estado da interface, acessibilidade e consumo de APIs REST.",
+            "objectives": "Desenvolver interfaces web acessíveis e integrar serviços por HTTP e JSON.",
+            "bibliography": "Material didático sintético sobre padrões web. Leitura complementar: React e TypeScript.",
+        },
+        {
+            "id": "d05",
+            "name": "Engenharia de Software",
+            "period": 4,
+            "hours": 80,
+            "page": 39,
+            "syllabus": "Levantamento e especificação de requisitos. Modelagem de sistemas, UML e arquitetura em camadas. Métodos ágeis, Scrum e Kanban. Controle de versão com Git. Revisão de código e documentação técnica.",
+            "objectives": "Trabalhar de forma colaborativa no ciclo de vida de software, utilizando Git e práticas ágeis.",
+            "bibliography": "Material didático sintético sobre engenharia de software e gestão de requisitos.",
+        },
+        {
+            "id": "d06",
+            "name": "Estatística e Análise de Dados",
+            "period": 4,
+            "hours": 60,
+            "page": 44,
+            "syllabus": "Estatística descritiva, probabilidade e inferência. Análise exploratória de dados com Python e pandas. Limpeza de dados, construção de gráficos e interpretação de resultados. Apresentação de indicadores em painéis analíticos.",
+            "objectives": "Analisar conjuntos de dados e comunicar evidências quantitativas de forma clara.",
+            "bibliography": "Material didático sintético sobre estatística aplicada. Leitura complementar: Power BI e visualização de dados.",
+        },
+        {
+            "id": "d07",
+            "name": "Redes de Computadores",
+            "period": 5,
+            "hours": 60,
+            "page": 49,
+            "syllabus": "Modelo TCP/IP. Endereçamento, roteamento, DNS, HTTP e HTTPS. Redes locais e comunicação cliente-servidor. Serviços de rede em Linux. Diagnóstico básico de conectividade.",
+            "objectives": "Compreender a comunicação em rede e configurar serviços básicos em Linux.",
+            "bibliography": "Material didático sintético sobre redes e protocolos de comunicação.",
+        },
+        {
+            "id": "d08",
+            "name": "Inteligência Artificial",
+            "period": 6,
+            "hours": 60,
+            "page": 55,
+            "syllabus": "Fundamentos de inteligência artificial e aprendizado de máquina. Classificação, regressão e agrupamento. Preparação de dados, treino, validação e métricas de avaliação. Experimentos com Python e scikit-learn.",
+            "objectives": "Aplicar modelos supervisionados e avaliar os resultados sem vazamento de dados.",
+            "bibliography": "Material didático sintético sobre aprendizagem estatística. Leitura complementar: TensorFlow.",
+        },
+        {
+            "id": "d09",
+            "name": "Qualidade e Testes de Software",
+            "period": 6,
+            "hours": 60,
+            "page": 59,
+            "syllabus": "Planejamento de testes e critérios de cobertura. Testes unitários, de integração e de aceitação. Automação de testes com pytest e JUnit. Inspeção de código, gestão de defeitos e integração contínua.",
+            "objectives": "Projetar casos de teste e automatizar a validação de aplicações.",
+            "bibliography": "Material didático sintético sobre qualidade de software. Leitura complementar: Cypress.",
+        },
+        {
+            "id": "d10",
+            "name": "Segurança da Informação",
+            "period": 7,
+            "hours": 60,
+            "page": 64,
+            "syllabus": "Princípios de confidencialidade, integridade e disponibilidade. Criptografia, autenticação e autorização. Desenvolvimento seguro, proteção de dados pessoais e fundamentos da LGPD. Análise de vulnerabilidades em aplicações web.",
+            "objectives": "Identificar riscos e aplicar controles básicos de segurança em sistemas de informação.",
+            "bibliography": "Material didático sintético sobre segurança e privacidade de dados.",
+        },
+        {
+            "id": "d11",
+            "name": "Sistemas Distribuídos",
+            "period": 7,
+            "hours": 60,
+            "page": 68,
+            "syllabus": "Comunicação entre serviços, concorrência e tolerância a falhas. Arquitetura de microsserviços. Virtualização e empacotamento de aplicações em contêineres. Princípios de escalabilidade e implantação de serviços distribuídos.",
+            "objectives": "Compreender a execução de aplicações distribuídas e seus requisitos de implantação.",
+            "bibliography": "Material didático sintético sobre sistemas distribuídos. Leitura complementar: Docker, Kubernetes e AWS.",
+        },
+        {
+            "id": "d12",
+            "name": "Projeto Integrador",
+            "period": 8,
+            "hours": 120,
+            "page": 74,
+            "syllabus": "Desenvolvimento de um sistema de informação em equipe. Pesquisa com usuários, prototipação de interfaces e avaliação de usabilidade. Integração entre interface, API REST e banco de dados. Apresentação do produto e documentação de decisões.",
+            "objectives": "Integrar competências do curso e validar uma solução com usuários em um projeto aplicado.",
+            "bibliography": "Material didático sintético sobre projetos de software centrados no usuário.",
+        },
+    ]
+
+    # Empresas e URLs abaixo são fictícias. Nenhuma vaga foi coletada da web.
+    job_specs = [
+        ("Desenvolvedor Python Júnior", "Horizonte Digital", "Backend", "2026-10-12", "Desenvolvimento de APIs REST em Python. Consultas SQL em PostgreSQL, testes com pytest e versionamento com Git. Vivência com Docker é desejável."),
+        ("Desenvolvedor Java Júnior", "Pinhais Sistemas", "Backend", "2026-10-11", "Implementar serviços Java com Spring Boot. Conhecimentos de SQL, PostgreSQL, Git e testes unitários com JUnit. Trabalho em equipe Scrum."),
+        ("Desenvolvedor Front-end React", "Aurora Interfaces", "Frontend", "2026-10-11", "Construir interfaces com React, TypeScript, HTML e CSS. Integrar APIs REST e assegurar acessibilidade. Testes de interface com Cypress."),
+        ("Analista de Dados Júnior", "Araucária Analytics", "Dados", "2026-10-10", "Preparar dados com Python e pandas. Escrever consultas SQL e criar painéis no Power BI. Comunicar indicadores e análises descritivas para as áreas de negócio."),
+        ("Estágio em Desenvolvimento Web", "Horizonte Digital", "Frontend", "2026-10-10", "Apoiar a construção de páginas em HTML, CSS e JavaScript. Consumir APIs REST, registrar alterações no Git e participar de revisões de usabilidade."),
+        ("Engenheiro de Dados Júnior", "Nuvem Sul", "Dados", "2026-10-09", "Criar pipelines de dados com Python, SQL e Apache Spark. Armazenar dados na AWS e automatizar rotinas de ingestão. Conhecimentos de Docker e Git."),
+        ("Analista DevOps Júnior", "Nuvem Sul", "DevOps", "2026-10-09", "Automatizar entregas com CI/CD, Docker e Kubernetes. Administrar recursos AWS com Terraform. Conhecimentos de Linux, redes e Git."),
+        ("Desenvolvedor Full Stack Júnior", "Lume Soluções", "Full stack", "2026-10-08", "Desenvolver aplicação com React e Node.js. Utilizar TypeScript, SQL, PostgreSQL e Git. Criar testes automatizados e integrar APIs REST."),
+        ("Analista de QA Júnior", "Pinhais Sistemas", "Qualidade", "2026-10-08", "Planejar e executar testes de integração e aceitação. Automatizar testes com Cypress e pytest. Acompanhar defeitos e utilizar Git e métodos ágeis."),
+        ("Desenvolvedor Backend Python", "Lume Soluções", "Backend", "2026-10-07", "Criar APIs REST com Python e FastAPI. Modelar dados em PostgreSQL e escrever consultas SQL. Utilizar Docker, Git e testes automatizados."),
+        ("Analista de Business Intelligence", "Araucária Analytics", "Dados", "2026-10-07", "Desenvolver painéis no Power BI, indicadores e modelos de dados. Utilizar SQL, DAX e processos ETL. Apresentar análises para pessoas de diferentes áreas."),
+        ("Estágio em Ciência de Dados", "Prisma Pesquisa", "Inteligência artificial", "2026-10-06", "Executar análise exploratória com Python e pandas. Experimentar modelos de machine learning com scikit-learn e interpretar métricas de classificação. Conhecimento de SQL."),
+        ("Desenvolvedor Java e APIs", "Candeia Tecnologia", "Backend", "2026-10-06", "Desenvolver microsserviços com Java e Spring Boot. Integrar APIs REST, PostgreSQL e mensageria com Kafka. Utilizar Git, Docker e JUnit."),
+        ("Desenvolvedor Front-end Júnior", "Aurora Interfaces", "Frontend", "2026-10-05", "Implementar componentes React com JavaScript e CSS. Aplicar acessibilidade, responsividade e testes com Cypress. Versionar código com Git."),
+        ("Analista de Infraestrutura Cloud", "Nuvem Sul", "DevOps", "2026-10-05", "Operar serviços AWS, contêineres Docker e clusters Kubernetes. Automatizar infraestrutura com Terraform. Conhecimento de Linux, DNS e redes TCP/IP."),
+        ("Analista de Segurança Júnior", "Fortaleza Digital", "Segurança", "2026-10-04", "Apoiar análise de vulnerabilidades web e controles de autenticação. Conhecimentos de Linux, redes, Python e LGPD. Documentar riscos e medidas de proteção."),
+        ("Desenvolvedor Node.js Júnior", "Candeia Tecnologia", "Backend", "2026-10-04", "Desenvolver serviços Node.js com TypeScript e APIs REST. Utilizar SQL, PostgreSQL, Git e Docker. Escrever testes unitários e de integração."),
+        ("Analista de Dados e Indicadores", "Lume Soluções", "Dados", "2026-10-03", "Extrair dados com SQL, tratar bases com Python e pandas e elaborar relatórios no Power BI. Aplicar estatística descritiva e documentar fontes."),
+        ("Engenheiro de Machine Learning Júnior", "Prisma Pesquisa", "Inteligência artificial", "2026-10-03", "Treinar modelos de machine learning com Python, scikit-learn e TensorFlow. Publicar modelos em APIs REST e empacotar serviços com Docker. Conhecimento de AWS."),
+        ("Estágio em Engenharia de Software", "Pinhais Sistemas", "Full stack", "2026-10-02", "Apoiar manutenção de sistemas Java e JavaScript. Conhecimentos básicos de SQL, Git, testes unitários e orientação a objetos. Participação em equipe Scrum."),
+        ("Analista de Automação de Testes", "Fortaleza Digital", "Qualidade", "2026-10-02", "Automatizar cenários web com Cypress e testes de serviços com pytest. Integrar testes a pipelines CI/CD e reportar resultados. Conhecimento de JavaScript e Git."),
+        ("Desenvolvedor Mobile Júnior", "Aurora Interfaces", "Mobile", "2026-10-01", "Desenvolver aplicativos com React Native e TypeScript. Consumir APIs REST, tratar estados de interface e aplicar testes. Versionamento com Git."),
+        ("Administrador de Banco de Dados Júnior", "Candeia Tecnologia", "Dados", "2026-10-01", "Administrar PostgreSQL, analisar consultas SQL e índices e acompanhar rotinas de backup. Conhecimentos de Linux, segurança e automatização com Python."),
+        ("Analista de Sistemas Júnior", "Horizonte Digital", "Análise de sistemas", "2026-09-30", "Levantar requisitos, produzir modelos UML e documentar APIs REST. Consultas SQL para diagnóstico e validação. Trabalho com Scrum, Git e testes de aceitação."),
+        ("Desenvolvedor Full Stack Java", "Pinhais Sistemas", "Full stack", "2026-09-30", "Construir backend Java com Spring Boot e interface React. Utilizar SQL, PostgreSQL, TypeScript e Git. Executar aplicações em Docker."),
+        ("Estágio em DevOps", "Nuvem Sul", "DevOps", "2026-09-29", "Apoiar automação de deploy com CI/CD e Docker. Conhecimentos de Linux, redes e Git. Contato inicial com AWS e monitoramento de serviços."),
+        ("Analista de Produto e Dados", "Lume Soluções", "Dados", "2026-09-29", "Investigar métricas de produto com SQL e Python. Construir painéis no Power BI e apoiar pesquisas de usabilidade. Comunicar descobertas de forma clara."),
+        ("Desenvolvedor de Integrações", "Horizonte Digital", "Backend", "2026-09-28", "Integrar sistemas usando Python, Java e APIs REST. Trabalhar com PostgreSQL, SQL e Kafka. Criar testes automatizados e documentação técnica."),
+        ("Analista de Plataforma Júnior", "Fortaleza Digital", "DevOps", "2026-09-28", "Operar Kubernetes e Docker em ambientes AWS. Configurar infraestrutura com Terraform e pipelines CI/CD. Diagnosticar falhas de rede em Linux."),
+        ("Desenvolvedor Web e Acessibilidade", "Aurora Interfaces", "Frontend", "2026-09-27", "Implementar interfaces acessíveis com HTML, CSS, JavaScript e React. Integrar APIs REST e verificar navegação por teclado. Colaborar usando Git e testes com Cypress."),
+    ]
+    cities = (["Itajaí, SC"] * 14 + ["Balneário Camboriú, SC"] * 8
+              + ["Navegantes, SC"] * 3 + ["Camboriú, SC"] * 3 + ["Itapema, SC"] * 2)
+    jobs = [
+        {
+            "id": f"j{index:02d}",
+            "title": title,
+            "company": f"{company} (fictícia)",
+            "city": cities[index - 1],
+            "area": canonical_area(area, title, description),
+            "date": date,
+            "url": f"https://example.invalid/vagas/demo-{index:02d}",
+            "description": f"Vaga sintética de demonstração. {description}",
+            "source": "demo",
+        }
+        for index, (title, company, area, date, description) in enumerate(job_specs, start=1)
+    ]
+
+    return {
+        "synthetic": True,
+        "notice": "Demonstração com PPC e vagas inteiramente sintéticos. Os resultados ilustram o método e não representam o mercado real.",
+        "config": {
+            "course": "Bacharelado em Sistemas de Informação · IFC Camboriú",
+            "city": "Itajaí, SC",
+            "radius": 40,
+            "platform": "LinkedIn",
+            "target": 30,
+            "terms": [],
+            "tags": "",
+            "threshold": 5,
+            "llm_limit": 100,
+            "methods": ["M2", "A1"],
+            "source": "demo",
+        },
+        "ppc": {
+            "filename": "PPC_Demonstrativo_Sintetico.pdf",
+            "size": 248320,
+            "pages": 84,
+        },
+        "disciplines": disciplines,
+        "jobs": jobs,
+    }
