@@ -7,6 +7,7 @@ import json
 import math
 import os
 import re
+import threading
 import time
 from collections import Counter
 from contextlib import asynccontextmanager
@@ -15,9 +16,10 @@ from typing import Literal
 
 from fastapi import BackgroundTasks, FastAPI, File, Form, HTTPException, Query, UploadFile
 from fastapi.middleware.cors import CORSMiddleware
-from fastapi.responses import Response
+from fastapi.responses import Response, JSONResponse
 from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel, Field
+from starlette.concurrency import run_in_threadpool
 
 from .dictionary import DICTIONARY, build_dictionary
 from .areas import canonical_area
@@ -25,26 +27,100 @@ from .engine import analyze
 from .reporting import csv_archive, export_tables, import_annotations, make_sample, now, validation_result, workbook
 from .storage import Store
 from .settings import data_directory
+from .persistence import build_store, storage_options, storage_description, PersistenceConfigurationError
+from .supabase_store import SupabaseStoreError, SupabaseConflictError, SupabaseUnavailableError
+from .import_sqlite import SQLiteImportError
 from .uploads import clean_filename, deduplicate_jobs, parse_jobs, read_upload, segment_ppc
 
 
 @asynccontextmanager
 async def lifespan(application):
-    recover_interrupted_batches()
+    await run_in_threadpool(initialize_persistence, application)
     yield
+    with _persistence_lock:
+        if _store is not None and hasattr(_store, "close"):
+            _store.close()
+            reset_store()
 
 
 app = FastAPI(title="Alinhamento Currículo–Mercado de TI", version="1.0.0", lifespan=lifespan)
 app.add_middleware(CORSMiddleware, allow_origins=["http://localhost:5173", "http://127.0.0.1:5173", "http://localhost:3000", "http://127.0.0.1:3000"], allow_methods=["GET", "POST", "PATCH"], allow_headers=["Content-Type"])
 _store: Store | None = None
+_store_identity: tuple | None = None
+_persistence_lock = threading.RLock()
+
+
+def _raw_store() -> Store:
+    global _store, _store_identity
+    options = storage_options()
+    if _store is None or _store_identity != options:
+        if _store is not None and hasattr(_store, "close"):
+            _store.close()
+        _store = build_store(options)
+        _store_identity = options
+    return _store
 
 
 def store() -> Store:
-    global _store
-    directory = data_directory()
-    if _store is None or _store.directory != directory:
-        _store = Store(directory)
-    return _store
+    with _persistence_lock:
+        error = getattr(app.state, "persistence_error", None)
+        if error:
+            raise SupabaseUnavailableError(error)
+        return _raw_store()
+
+
+def reset_store():
+    global _store, _store_identity
+    with _persistence_lock:
+        _store = None
+        _store_identity = None
+
+
+def initialize_persistence(application, expected_generation: int | None = None):
+    """Serialize startup/retry and expose data only after the full import succeeds."""
+    with _persistence_lock:
+        generation = getattr(application.state, "persistence_generation", 0)
+        if expected_generation is not None and (
+            expected_generation != generation or not getattr(application.state, "persistence_error", None)
+        ):
+            return
+        try:
+            database = _raw_store()
+            if getattr(database, "source_name", "sqlite") == "supabase":
+                database.check_ready()
+                local_file = data_directory() / "platform.sqlite3"
+                if local_file.is_file() and os.getenv("TCC_IMPORT_SQLITE", "auto").lower() != "off":
+                    from .import_sqlite import import_sqlite_snapshot
+                    application.state.sqlite_import = import_sqlite_snapshot(local_file, database, apply=True)
+            recover_interrupted_batches(database)
+        except (SupabaseStoreError, PersistenceConfigurationError, SQLiteImportError) as error:
+            # Keep the UI available, but neither expose nor change partial data.
+            application.state.persistence_error = str(error)
+        else:
+            application.state.persistence_error = None
+        finally:
+            application.state.persistence_generation = generation + 1
+
+
+@app.middleware("http")
+async def persistence_readiness(request, call_next):
+    if request.url.path.startswith("/api/") and getattr(app.state, "persistence_error", None):
+        generation = getattr(app.state, "persistence_generation", 0)
+        await run_in_threadpool(initialize_persistence, app, expected_generation=generation)
+        error = getattr(app.state, "persistence_error", None)
+        if error:
+            return JSONResponse(status_code=503, content={"status": "unavailable", "detail": error})
+    return await call_next(request)
+
+
+@app.exception_handler(SupabaseStoreError)
+async def supabase_error_handler(request, error):
+    return JSONResponse(status_code=409 if isinstance(error, SupabaseConflictError) else 503, content={"detail": str(error)})
+
+
+@app.exception_handler(PersistenceConfigurationError)
+async def persistence_error_handler(request, error):
+    return JSONResponse(status_code=503, content={"detail": str(error)})
 
 
 def batch_or_404(batch_id: int) -> dict:
@@ -63,9 +139,14 @@ def log(batch: dict, message: str, level: str = "info"):
     batch.setdefault("logs", []).append({"time": now(), "level": level, "message": message})
 
 
-def recover_interrupted_batches():
+def recover_interrupted_batches(database=None):
     """Record interrupted work on startup without restarting network requests."""
-    for batch in store().all():
+    # The shared database can have a worker running in another Codespace.
+    # A local restart cannot establish that those executions were interrupted.
+    database = database if database is not None else store()
+    if getattr(database, "source_name", "sqlite") == "supabase":
+        return
+    for batch in database.all():
         interrupted_process = batch["status"] == "processing"
         interrupted_collection = batch["status"] == "review" and batch.get("collection", {}).get("running")
         if not interrupted_process and not interrupted_collection:
@@ -81,7 +162,7 @@ def recover_interrupted_batches():
                 current["collection"].update(running=False, partial=True, interrupted=True, count=len(current["jobs"]))
                 stage(current, "collection", "warning", f"Coleta interrompida pelo reinício do servidor. {len(current['jobs'])} vagas preservadas; nenhuma requisição foi retomada.")
                 log(current, "Coleta interrompida pelo reinício. Revise as vagas preservadas ou crie um novo lote.", "warning")
-        store().update(batch["id"], recover)
+        database.update(batch["id"], recover)
 
 
 def stage(batch: dict, key: str, status: str, detail: str, duration: float | None = None):
@@ -101,9 +182,12 @@ def llm_capabilities() -> dict:
 
 @app.get("/api/health")
 def health():
+    error = getattr(app.state, "persistence_error", None)
+    if error:
+        return JSONResponse(status_code=503, content={"status": "unavailable", "detail": error})
     llm = llm_capabilities()
     return {"status": "ok", "capabilities": {"pdf": True, "jobspy": importlib.util.find_spec("jobspy") is not None, "llm": llm.get("enabled", False), "llm_detail": llm},
-            "dictionary_count": len(build_dictionary(store().dictionary_edits()))}
+            "dictionary_count": len(build_dictionary(store().dictionary_edits())), "storage": storage_description(store())}
 
 
 @app.get("/api/dictionary")
@@ -399,16 +483,20 @@ def collect_jobs(batch_id: int):
             current["collection"].update(running=False, partial=True)
             stage(current, "collection", "warning", f"Coleta indisponível ({type(exc).__name__}). Importe CSV em um novo lote.", time.monotonic()-started)
             log(current, "A coleta não pôde ser concluída; nenhuma vaga foi inventada.", "warning")
-        store().update(batch_id, failure)
+        try:
+            store().update(batch_id, failure)
+        except SupabaseStoreError:
+            import logging
+            logging.getLogger("tcc").warning("Não foi possível registrar a falha de coleta do lote %s; armazenamento temporariamente indisponível.", batch_id)
 
 
 def process_batch(batch_id: int):
     started = time.monotonic()
-    batch = batch_or_404(batch_id)
-    if batch["status"] != "processing":
-        return
-    store().update(batch_id, lambda current: stage(current, "extraction", "running", "Analisando ementas, objetivos e descrições das vagas; bibliografia excluída."))
     try:
+        batch = batch_or_404(batch_id)
+        if batch["status"] != "processing":
+            return
+        store().update(batch_id, lambda current: stage(current, "extraction", "running", "Analisando ementas, objetivos e descrições das vagas; bibliografia excluída."))
         classified_at = time.monotonic()
         classified_jobs = [{**job, "area": canonical_area(job.get("area"), job["title"], job["description"])} for job in batch["jobs"]]
         classification_counts = Counter(job["area"] for job in classified_jobs)
@@ -446,9 +534,12 @@ def process_batch(batch_id: int):
             current.update(status="failed", error=f"A análise falhou ({type(exc).__name__}). Revise os arquivos e os métodos; veja o log do servidor para diagnóstico.")
             stage(current, "extraction", "failed", current["error"], time.monotonic() - started)
             log(current, current["error"], "error")
-        store().update(batch_id, failure)
         import logging
-        logging.getLogger("tcc").exception("Batch %s failed", batch_id)
+        try:
+            store().update(batch_id, failure)
+        except SupabaseStoreError:
+            logging.getLogger("tcc").warning("Não foi possível registrar a falha do lote %s; armazenamento temporariamente indisponível.", batch_id)
+        logging.getLogger("tcc").error("Falha no processamento do lote %s (%s).", batch_id, type(exc).__name__)
 
 
 def completed_batch(batch_id: int) -> dict:

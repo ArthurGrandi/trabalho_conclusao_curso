@@ -28,7 +28,7 @@ def pdf_bytes(text, encrypted=False):
 class ApiTests(unittest.TestCase):
     def setUp(self):
         self.directory = tempfile.TemporaryDirectory(prefix="tcc-api-")
-        self.environment = patch.dict(os.environ, {"TCC_DATA_DIR": self.directory.name})
+        self.environment = patch.dict(os.environ, {"TCC_DATA_DIR": self.directory.name, "TCC_STORAGE_BACKEND": "sqlite"})
         self.environment.start()
         self.client = TestClient(app)
 

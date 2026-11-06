@@ -10,5 +10,5 @@ export type Stage = { key: string; label: string; status: 'waiting' | 'running' 
 export type Results = { competencies: Competency[]; associations: Association[]; indicators: Record<string, unknown>; area_indicators: Record<string, unknown>; cooccurrence: unknown; unknown_terms?: Array<{ term: string; count: number }>; [key: string]: unknown };
 export type Batch = { id: number; created_at: string; status: 'review' | 'processing' | 'completed' | 'cancelled' | 'failed'; demo: boolean; config: Config; ppc: PPC; disciplines: Discipline[]; jobs: Job[]; stages: Stage[]; results: Results | null; corrections: number; llm_calls: number; logs: unknown[]; error?: string | null; validation?: Record<string, unknown> | null; [key: string]: unknown };
 export type BatchSummary = { id: number; created_at: string; status: Batch['status']; demo: boolean; config: Config; ppc: { filename: string }; job_count?: number; jobs_count?: number; [key: string]: unknown };
-export type Health = { status: string; capabilities: { pdf: boolean; jobspy: boolean; llm: boolean }; dictionary_count: number };
+export type Health = { status: string; capabilities: { pdf: boolean; jobspy: boolean; llm: boolean }; dictionary_count: number; storage?: {backend: 'sqlite'|'supabase';label:string;cloud:boolean} };
 export type Notify = (message: string, kind?: 'success' | 'error' | 'info') => void;

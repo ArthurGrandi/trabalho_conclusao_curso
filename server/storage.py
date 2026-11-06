@@ -12,6 +12,8 @@ from .settings import data_directory
 
 
 class Store:
+    source_name = "sqlite"
+
     def __init__(self, directory: str | Path | None = None):
         self.directory = Path(directory) if directory is not None else data_directory()
         self.directory.mkdir(parents=True, exist_ok=True)

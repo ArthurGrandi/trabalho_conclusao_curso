@@ -3,6 +3,7 @@ import { existsSync } from 'node:fs';
 import { resolve } from 'node:path';
 import { expect, test } from '@playwright/test';
 import type { APIRequestContext } from '@playwright/test';
+import { recordCreatedBatch } from './created-batches';
 
 async function createReviewBatch(request: APIRequestContext) {
   const response = await request.post('/api/batches', { data: {
@@ -11,7 +12,9 @@ async function createReviewBatch(request: APIRequestContext) {
     jobs: [{ id: 'vaga-amostra', title: 'Desenvolvedor Python', description: 'Desenvolvimento de aplicações em Python e SQL.', company: 'Empresa de teste', city: 'Itajaí, SC', date: '2026-10-01', url: '', source: 'CSV', area: 'Desenvolvimento' }],
   } });
   expect(response.status()).toBe(201);
-  return response.json();
+  const batch = await response.json();
+  recordCreatedBatch(batch.id);
+  return batch;
 }
 
 test('amostra cega salva a revisão, avisa após edição e é preservada ao confirmar', async ({ page, request }) => {

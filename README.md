@@ -4,6 +4,8 @@ Plataforma de pesquisa para comparar as competências demandadas em vagas de TI 
 
 A interface segue a identidade dos anexos: Newsreader e IBM Plex, verde sóbrio, cinco etapas, indicadores rastreáveis e layout responsivo. As fontes são servidas localmente.
 
+Os lotes podem ser persistidos no **Supabase**, reutilizando o PAT de projeto já configurado no servidor. A barra lateral confirma **Dados no Supabase** ou **Dados locais · SQLite**. Veja o [guia de persistência e importação](docs/supabase.md).
+
 ## GitHub Codespaces
 
 1. No GitHub, clique em **Code → Codespaces** e abra ou crie um Codespace na branch `main`.
@@ -29,6 +31,12 @@ npm start
 O projeto inclui uma configuração de Codespaces com Python 3.12 e Node.js 22, preparação das dependências e encaminhamento das portas. Para aplicar essa configuração em um Codespace antigo, use **Codespaces: Rebuild Container** na paleta de comandos do editor. A criação/reconstrução do contêiner não foi executada neste workspace; os comandos de instalação, execução e acesso HTTP foram testados aqui.
 
 Se a instalação antiga ficou em `pandas-2.2.3.tar.gz` ou `Preparing metadata`, interrompa com **Ctrl+C**, atualize com `git pull --ff-only origin main` e execute `npm start` novamente. O instalador seleciona explicitamente Python 3.12; se necessário, prepara esse interpretador com `uv` em um diretório local. Ambientes `.venv` com outra versão são preservados em `.cache/venv-backups` antes da recriação. Instalações incompletas são detectadas e retomadas. Pandas e NumPy usam pacotes binários, evitando uma compilação inesperada.
+
+### Guardar os dados no Supabase
+
+No [GitHub → Settings → Codespaces](https://github.com/settings/codespaces), cadastre o mesmo PAT já criado como segredo **`SUPABASE_ACCESS_TOKEN`** e autorize este repositório. Pare e reabra o Codespace para receber a variável; depois execute `git pull --ff-only origin main` e `npm start`. Não é necessário gerar outra chave nem colocá-la no frontend. O segredo salvo neste ambiente do Codex não é transferido automaticamente ao GitHub.
+
+Com o token disponível, o modo padrão seleciona o projeto vinculado em `supabase/project.json`. Na primeira inicialização, os lotes e a curadoria presentes no SQLite local são copiados com backup, preservação de histórico e proteção contra duplicação. Confirme **Dados no Supabase** na interface. Sem configuração remota, o modo local continua disponível. Uma falha do Supabase é mostrada como erro, sem mudar silenciosamente o destino dos dados. Consulte [configuração, importação e limites do MVP](docs/supabase.md).
 
 ## Executar no seu computador
 
@@ -80,7 +88,10 @@ Para habilitar M3/A2, configure no ambiente do processo do servidor:
 | `TCC_LLM_API_KEY` | Chave do provedor; também aceita `OPENAI_API_KEY` existente |
 | `TCC_LLM_BASE_URL` | Base HTTPS, padrão `https://api.openai.com/v1` |
 | `TCC_LLM_MODEL` | Modelo, padrão `gpt-4o-mini` |
-| `TCC_DATA_DIR` | Opcional: diretório SQLite, padrão `.tcc-data` dentro do projeto |
+| `TCC_DATA_DIR` | Diretório local de SQLite, backups e cache; padrão `.tcc-data` dentro do projeto |
+| `SUPABASE_ACCESS_TOKEN` | PAT de projeto no servidor; sua presença seleciona o Supabase no modo automático |
+| `SUPABASE_PROJECT_REF` | Opcional; substitui o projeto de `supabase/project.json` |
+| `TCC_STORAGE_BACKEND` | `auto` (padrão), `supabase` ou `sqlite` |
 
 `.env.example` é uma referência; os scripts não carregam `.env` automaticamente. Não envie chaves pelo chat nem as adicione ao Git. Defina `TCC_DATA_DIR` somente se quiser guardar os dados em outro diretório gravável.
 
@@ -98,9 +109,9 @@ Mantenha as amostras de desenvolvimento e teste separadas e anote sem consultar 
 
 ## Persistência
 
-Lotes, configurações, trechos, decisões e anotações ficam em SQLite, fora das fontes e do Git. Os PDFs originais não são armazenados. Cada análise cria um lote novo.
+Lotes, configurações, trechos, decisões e anotações ficam no Supabase quando configurado, ou em SQLite local. Os PDFs originais não são armazenados. Cada análise cria um lote novo. A integração remota usa um schema privado, com dados JSONB completos e visualizações para disciplinas, vagas, associações, evidências e anotações. O token fica somente no backend; a persistência do MVP usa a Management API e seus limites estão descritos em `docs/supabase.md`.
 
-Processos não sobrevivem ao encerramento do servidor. Uma análise interrompida é marcada no próximo início; coletas e chamadas LLM não são retomadas automaticamente. Este é um MVP de pesquisa para execução local, conforme os anexos, sem autenticação e gestão de usuários.
+Processos não sobrevivem ao encerramento do servidor; coletas e chamadas LLM não são retomadas automaticamente. No modo local, uma análise interrompida é marcada no próximo início. No banco compartilhado, outra instância pode estar processando o lote; o servidor não cancela essas execuções ao iniciar. Uma execução realmente interrompida pode ser cancelada na interface antes de criar um novo lote. Este é um MVP de pesquisa para operação individual, sem autenticação e gestão de usuários.
 
 ## Verificar
 

@@ -3,6 +3,7 @@ import { existsSync } from 'node:fs';
 import { resolve } from 'node:path';
 import { expect, test } from '@playwright/test';
 import type { Page } from '@playwright/test';
+import { recordCreatedBatch } from './created-batches';
 
 const textualPdf = '/tmp/tcc-ui-test.pdf';
 const scannedPdf = '/tmp/tcc-ui-scanned.pdf';
@@ -80,6 +81,7 @@ test('demonstração filtra áreas, preserva decisões e exporta arquivos reais'
   const created = page.waitForResponse(response => response.url().endsWith('/api/demo') && response.request().method() === 'POST');
   await page.getByRole('button', { name: 'Explorar demonstração' }).click();
   const batch = await (await created).json();
+  recordCreatedBatch(batch.id);
   await expect(page.getByRole('heading', { name: 'Painel de alinhamento' })).toBeVisible();
   await expect(page.getByText('Demonstração com dados sintéticos.')).toBeVisible();
   if (testInfo.project.name === 'desktop') await page.screenshot({ path: '/tmp/tcc-dashboard-desktop.png', fullPage: true });
@@ -180,6 +182,7 @@ test('PDF textual e CSV permitem revisar, salvar e processar um lote', async ({ 
   const creation = page.waitForResponse(response => response.url().endsWith('/api/batches') && response.request().method() === 'POST');
   await page.getByRole('button', { name: 'Rodar análise' }).click();
   const batch = await (await creation).json();
+  recordCreatedBatch(batch.id);
   await expect(page.getByRole('heading', { name: 'Revisão do PPC', exact: true })).toBeVisible();
   await page.getByLabel('Nome da disciplina', { exact: true }).fill('Programação e fundamentos — revisão de teste');
   await page.getByRole('button', { name: 'Salvar alterações', exact: true }).click();

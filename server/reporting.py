@@ -84,7 +84,7 @@ def export_tables(batch: dict) -> dict[str, list[dict]]:
 
 
 def make_sample(batch: dict, dictionary: list[dict]) -> dict[str, list[dict]]:
-    rng = random.Random(f"curriculo-mercado:{batch['id']}")
+    rng = random.Random(f"curriculo-mercado:{batch.get('sample_seed', batch['id'])}")
     by_area = {}
     for job in batch["jobs"]:
         by_area.setdefault(job.get("area", "Outra"), []).append(job)

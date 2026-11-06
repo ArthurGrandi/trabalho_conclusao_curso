@@ -12,3 +12,4 @@ __pycache__/
 test-results/
 playwright-report/
 *.tsbuildinfo
+supabase/.temp/
