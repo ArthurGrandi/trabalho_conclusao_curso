@@ -2,6 +2,8 @@
 
 Plataforma de pesquisa para comparar as competências demandadas em vagas de TI com as ementas e os objetivos de um PPC. Implementa o fluxo dos dois PDFs de UI/UX fornecidos: **Nova análise → Revisão do PPC → Processamento → Painel → Evidências → Validação e exportação**.
 
+A [auditoria técnica e documentação para o TCC](docs/auditoria/README.md) reúne arquitetura com Mermaid, métodos implementados, verificação da persistência, evidências disponíveis e plano de experimentos para apoiar os capítulos 4 e 5.
+
 A interface segue a identidade dos anexos: Newsreader e IBM Plex, verde sóbrio, cinco etapas, indicadores rastreáveis e layout responsivo. As fontes são servidas localmente.
 
 Os lotes podem ser persistidos no **Supabase**, reutilizando o PAT de projeto já configurado no servidor. A barra lateral confirma **Dados no Supabase** ou **Dados locais · SQLite**. Veja o [guia de persistência e importação](docs/supabase.md).
